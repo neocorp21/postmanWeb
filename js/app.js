@@ -6,7 +6,7 @@
    Constants
 ============================================================ */
 const CONFIG = Object.freeze({
-    ENDPOINT_URL: 'http://localhost:8083/api/v1/architecture/endpoints',
+    ENDPOINT_URL: ' https://5189-38-25-83-131.ngrok-free.app/api/v1/architecture/endpoints',
 
     STORAGE: {
         BASE_URL: 'at_baseUrl',
