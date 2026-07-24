@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Tester</title>
+
+    <!-- Google Fonts con Preconnect y Display Swap -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Script diferido -->
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+    <div class="topbar-brand">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="16 18 22 12 16 6"/>
+            <polyline points="8 6 2 12 8 18"/>
+        </svg>
+        <span>API Tester</span>
+    </div>
+    <div class="topbar-fields">
+        <label class="field-group" for="baseUrl">
+            <span class="field-label">Base URL</span>
+            <input id="baseUrl" type="url" value="http://localhost:8083" placeholder="http://localhost:8083" autocomplete="off" />
+        </label>
+        <label class="field-group" for="bearerToken">
+            <span class="field-label">Bearer Token</span>
+            <input id="bearerToken" type="password" placeholder="Opcional" autocomplete="off" />
+        </label>
+    </div>
+</header>
+
+<div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" aria-label="Navegación de endpoints">
+        <div class="sidebar-header">
+            <span class="sidebar-title">ENDPOINTS</span>
+            <span id="totalCount" class="sidebar-count">0 total</span>
+        </div>
+
+        <!-- Filtro rápido de Endpoints -->
+        <div class="sidebar-search">
+            <input id="endpointSearch" type="search" placeholder="Filtrar endpoints..." autocomplete="off" />
+        </div>
+
+        <div id="endpointList" class="endpoint-list" role="navigation">
+            <p class="loading-msg">Cargando endpoints...</p>
+        </div>
+    </aside>
+
+    <!-- MAIN PANEL -->
+    <main class="main-panel">
+        <!-- URL BAR -->
+        <section class="url-bar" aria-label="Barra de ejecución">
+            <span id="urlMethod" class="method-badge method-get">GET</span>
+            <input id="urlDisplay" class="url-input" type="text" readonly value="Selecciona un endpoint" aria-label="URL del Request" />
+
+            <!-- Diagnóstico: Botón de Abortar / Cancelar -->
+            <button id="cancelBtn" class="cancel-btn hidden" type="button" title="Cancelar petición">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+
+            <!-- Diagnóstico: Mini Runner / Prueba de Carga -->
+            <button id="runnerBtn" class="runner-btn" type="button" title="Ejecutar prueba de ráfaga (5x)">
+                ⚡ x5
+            </button>
+
+            <button id="sendBtn" class="send-btn" type="button">
+                <span id="sendBtnText">Enviar</span>
+                <span id="sendSpinner" class="spinner hidden" aria-hidden="true"></span>
+            </button>
+        </section>
+
+        <!-- TABS DE REQUEST -->
+        <nav class="tab-bar" role="tablist" aria-label="Secciones del Request">
+            <button class="tab-btn active" role="tab" aria-selected="true" data-tab="params" id="tab-btn-params">Params</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="headers" id="tab-btn-headers">Headers</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="body" id="tab-btn-body">Body</button>
+            <div class="tab-meta" id="endpointMeta"></div>
+        </nav>
+
+        <!-- TAB CONTENT: PARAMS -->
+        <section id="tab-params" class="tab-panel active" role="tabpanel" aria-labelledby="tab-btn-params">
+            <div id="pathVarsSection" class="params-section hidden">
+                <div class="section-label">PATH VARIABLES</div>
+                <div id="pathVarRows" class="kv-table"></div>
+            </div>
+            <div id="querySection" class="params-section">
+                <div class="section-header">
+                    <span class="section-label">QUERY PARAMETERS</span>
+                    <button id="addQueryBtn" class="add-btn" type="button">+ Agregar param</button>
+                </div>
+                <div id="queryParamRows" class="kv-table"></div>
+            </div>
+        </section>
+
+        <!-- TAB CONTENT: HEADERS -->
+        <section id="tab-headers" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-btn-headers">
+            <div class="section-header">
+                <span class="section-label">HEADERS</span>
+                <button id="addHeaderBtn" class="add-btn" type="button">+ Agregar header</button>
+            </div>
+            <div id="headerRows" class="kv-table"></div>
+        </section>
+
+        <!-- TAB CONTENT: BODY -->
+        <section id="tab-body" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-btn-body">
+            <div id="bodyDtoLabel" class="dto-label"></div>
+            <textarea id="bodyEditor" class="body-editor" placeholder="Sin body para este endpoint" spellcheck="false"></textarea>
+        </section>
+
+        <!-- RESPONSE PANEL -->
+        <section class="response-area" aria-label="Respuesta del servidor">
+            <div id="responseEmpty" class="response-empty">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <p>Sin respuesta todavía</p>
+                <small>Envía un request para ver la respuesta aquí</small>
+            </div>
+
+            <div id="responseContent" class="hidden">
+                <div class="response-meta">
+                    <span id="statusBadge" class="status-badge"></span>
+                    <span id="responseTime" class="resp-stat"></span>
+                    <span id="responseSize" class="resp-stat"></span>
+
+                    <nav class="resp-tabs" role="tablist" aria-label="Pestañas de Respuesta">
+                        <button class="tab-btn active" role="tab" aria-selected="true" data-resp-tab="body">Body</button>
+                        <button class="tab-btn" role="tab" aria-selected="false" data-resp-tab="respHeaders">Headers</button>
+                        <button class="tab-btn" role="tab" aria-selected="false" data-resp-tab="metrics">Metrics ⚡</button>
+                    </nav>
+
+                    <button id="copyRespBtn" class="copy-btn" type="button" title="Copiar respuesta">Copiar</button>
+                </div>
+
+                <div id="resp-tab-body" class="resp-panel active" role="tabpanel">
+                    <pre id="responseBody" class="response-body"></pre>
+                </div>
+
+                <div id="resp-tab-respHeaders" class="resp-panel hidden" role="tabpanel">
+                    <div id="responseHeaders" class="kv-table resp-headers-table"></div>
+                </div>
+
+                <!-- DIAGNÓSTICO Y TIEMPOS -->
+                <div id="resp-tab-metrics" class="resp-panel hidden" role="tabpanel">
+                    <div class="metrics-container">
+                        <h4>Desglose de Latencia (Timing Waterfall)</h4>
+
+                        <div class="metric-bar-group">
+                            <div class="metric-label"><span>TTFB (Tiempo al primer byte)</span> <strong id="timeTtfb">0 ms</strong></div>
+                            <div class="metric-progress"><div id="barTtfb" class="progress-fill" style="width: 0%;"></div></div>
+                        </div>
+
+                        <div class="metric-bar-group">
+                            <div class="metric-label"><span>Descarga de Contenido</span> <strong id="timeDownload">0 ms</strong></div>
+                            <div class="metric-progress"><div id="barDownload" class="progress-fill" style="width: 0%;"></div></div>
+                        </div>
+
+                        <hr class="metrics-divider" />
+
+                        <h4>Resumen de Prueba Ráfaga (Runner x5)</h4>
+                        <div id="runnerResults" class="runner-summary">
+                            <p class="text-muted">Presiona ⚡ x5 en la barra superior para medir estabilidad.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+</body>
+</html>
