@@ -503,8 +503,12 @@ async function sendRequest(silent = false) {
 
     const url = buildUrl(state.selected);
     const method = state.selected.method;
-
-    const headers = {};
+// --- CABECERAS ---
+    // 1. Definimos las cabeceras globales/obligatorias
+    const headers = {
+        "ngrok-skip-browser-warning": "true" // <--- Inyectada automáticamente en TODAS las peticiones
+    };// 2. Leemos los headers configurados por el usuario en la UI
+    
     if (DOM.headerRows) {
         DOM.headerRows.querySelectorAll('.kv-row').forEach(row => {
             const key = row.querySelector('.kv-key').value.trim();
