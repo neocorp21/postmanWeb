@@ -179,7 +179,11 @@ function restoreSettings() {
 ============================================================ */
 async function loadEndpoints() {
     try {
-        const response = await fetch(CONFIG.ENDPOINT_URL);
+         const response = await fetch(CONFIG.ENDPOINT_URL, {
+            headers: {
+                "ngrok-skip-browser-warning": "true"
+            }
+        });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
         state.endpoints = await response.json();
