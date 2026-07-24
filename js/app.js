@@ -588,7 +588,7 @@ async function runBurstTest() {
     switchRespTab('metrics');
 
     const results = [];
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 5; i++) {
         const res = await sendRequest(true); // silent = true
         if (res) results.push(res);
     }

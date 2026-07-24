@@ -1,241 +1,13 @@
 /* ============================================================
-   API Tester — Style Sheet (Dark Theme)
+   API Tester — Style Sheet (Dark Theme & Responsive)
    ============================================================ */
 
-/* --- CSS Variables & Design Tokens --- */
-
-/* ============================================================
-   FIX RESPONSIVE + SCROLL
-============================================================ */
-
-
-/* Permitir scroll general */
-body {
-    overflow: auto;
-    min-height: 100vh;
-}
-
-
-/* Layout principal */
-.layout {
-    min-height: calc(100vh - 52px);
-    height: auto;
-    overflow: hidden;
-}
-
-
-/* Panel principal */
-.main-panel {
-    min-width: 0;
-    min-height: 0;
-}
-
-
-/* Evita que los tabs bloqueen contenido */
-.tab-panel {
-    min-height: 200px;
-}
-
-
-/* Response permite crecer y hacer scroll */
-.response-area {
-    min-height: 350px;
-    overflow: auto;
-}
-
-
-.resp-panel {
-    min-height: 200px;
-    overflow: auto;
-}
-
-
-.response-body {
-    max-height: 500px;
-    overflow: auto;
-    white-space: pre-wrap;
-    word-break: break-word;
-}
-
-
-/* ============================================================
-   TABLET
-============================================================ */
-
-@media (max-width: 900px) {
-
-
-    body {
-        overflow: auto;
-    }
-
-
-    .topbar {
-        height: auto;
-        min-height: 52px;
-        flex-direction: column;
-        align-items: stretch;
-        padding: 1rem;
-    }
-
-
-    .topbar-fields {
-        max-width: none;
-        width: 100%;
-        flex-direction: column;
-    }
-
-
-    .field-group {
-        width: 100%;
-    }
-
-
-
-    .layout {
-        display: flex;
-        flex-direction: column;
-        height: auto;
-    }
-
-
-    .sidebar {
-        width: 100%;
-        height: 260px;
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
-    }
-
-
-    .endpoint-list {
-        overflow-y: auto;
-    }
-
-
-
-    .main-panel {
-        width: 100%;
-        overflow: visible;
-    }
-
-
-
-    .url-bar {
-        flex-wrap: wrap;
-        padding: .75rem;
-    }
-
-
-    .url-input {
-        width: 100%;
-        order: 5;
-    }
-
-
-    .send-btn,
-    .runner-btn,
-    .cancel-btn {
-        flex: 1;
-    }
-
-
-
-    .tab-bar,
-    .resp-tabs {
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-
-
-
-    .tab-meta {
-        display: none;
-    }
-
-
-    .kv-row {
-        flex-direction: column;
-    }
-
-
-    .kv-key,
-    .kv-val {
-        width: 100%;
-    }
-
-
-    .response-meta {
-        flex-wrap: wrap;
-    }
-
-}
-
-
-
-/* ============================================================
-   MOBILE
-============================================================ */
-
-@media (max-width: 600px) {
-
-
-    body {
-        font-size: 13px;
-    }
-
-
-    .topbar-brand {
-        justify-content: center;
-    }
-
-
-
-    .url-bar {
-        gap: .4rem;
-    }
-
-
-    .method-badge {
-        min-width: 55px;
-    }
-
-
-    .send-btn {
-        width: 100%;
-    }
-
-
-
-    .response-area {
-        min-height: 450px;
-    }
-
-
-
-    .response-body {
-        font-size: 11px;
-        max-height: 350px;
-    }
-
-
-
-    .metrics-container {
-        width: 100%;
-    }
-
-
-
-    .copy-btn {
-        margin-left: 0;
-    }
-
-}
 :root {
     --bg-dark: #121316;
     --bg-panel: #1a1b1e;
     --bg-card: #25262b;
     --bg-hover: #2c2e33;
-
+    
     --border-color: #2c2e33;
     --border-focus: #3b82f6;
 
@@ -263,7 +35,7 @@ body {
     --font-mono: 'JetBrains Mono', monospace;
 }
 
-/* --- Base Reset & Body --- */
+/* Base Reset & Body */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -294,7 +66,7 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    height: 52px;
+    min-height: 52px;
 }
 
 .topbar-brand {
@@ -359,6 +131,7 @@ body {
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
 }
 
 .sidebar-header {
@@ -456,6 +229,7 @@ body {
     min-width: 42px;
     text-align: center;
     color: #fff;
+    display: inline-block;
 }
 
 .method-get { background-color: var(--method-get); }
@@ -471,6 +245,7 @@ body {
     flex-direction: column;
     overflow: hidden;
     background: var(--bg-dark);
+    min-width: 0; /* Evita que flexbox se desborde */
 }
 
 /* --- URL Bar --- */
@@ -481,10 +256,12 @@ body {
     padding: 0.75rem 1rem;
     background: var(--bg-panel);
     border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
 }
 
 .url-input {
     flex: 1;
+    min-width: 200px;
     background: var(--bg-dark);
     border: 1px solid var(--border-color);
     color: var(--text-heading);
@@ -537,6 +314,7 @@ body {
     background: var(--bg-panel);
     border-bottom: 1px solid var(--border-color);
     padding: 0 1rem;
+    overflow-x: auto;
 }
 
 .tab-btn {
@@ -549,6 +327,7 @@ body {
     font-weight: 500;
     cursor: pointer;
     transition: all 0.15s;
+    white-space: nowrap;
 }
 
 .tab-btn:hover { color: var(--text-main); }
@@ -579,7 +358,8 @@ body {
 .tab-panel {
     padding: 1rem;
     overflow-y: auto;
-    flex: 1;
+    max-height: 250px;
+    flex-shrink: 0;
 }
 
 .params-section { margin-bottom: 1.2rem; }
@@ -653,7 +433,7 @@ body {
 
 .body-editor {
     width: 100%;
-    height: 180px;
+    height: 140px;
     background: var(--bg-panel);
     border: 1px solid var(--border-color);
     color: var(--text-main);
@@ -665,14 +445,14 @@ body {
     outline: none;
 }
 
-/* --- Response Section --- */
+/* --- Response Section (SCROLL FIX HERE) --- */
 .response-area {
     flex: 1;
     border-top: 2px solid var(--border-color);
     display: flex;
     flex-direction: column;
     background: var(--bg-dark);
-    overflow: hidden;
+    min-height: 0; /* OBLIGATORIO para permitir scroll en contenedores Flexbox */
 }
 
 .response-empty {
@@ -692,6 +472,14 @@ body {
     padding: 0.4rem 1rem;
     background: var(--bg-panel);
     border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+#responseContent {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
 }
 
 .status-badge {
@@ -723,10 +511,12 @@ body {
     cursor: pointer;
 }
 
+/* Paneles contenedores con Scroll Activo */
 .resp-panel {
     flex: 1;
     overflow: auto;
     padding: 1rem;
+    min-height: 0;
 }
 
 .response-body {
@@ -734,9 +524,10 @@ body {
     font-size: 12px;
     white-space: pre-wrap;
     word-break: break-all;
+    margin: 0;
 }
 
-/* --- Metrics / Waterfall Section --- */
+/* Metrics Section */
 .metrics-container {
     max-width: 600px;
 }
@@ -795,13 +586,80 @@ body {
 }
 
 @keyframes spin {
-    to { transform: rotate(360ddeg); }
+    to { transform: rotate(360deg); }
 }
 
-/* --- JSON Syntax Highlighting --- */
+/* JSON Syntax Highlighting */
 .json-key { color: #f87171; }
 .json-str { color: #a3e635; }
 .json-num { color: #38bdf8; }
 .json-bool { color: #c084fc; }
 .json-null { color: #9ca3af; }
 .error-msg { color: #f87171; line-height: 1.5; }
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--bg-hover);
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) var(--bg-dark);
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN (Media Queries)
+   ============================================================ */
+@media (max-width: 850px) {
+    .topbar {
+        flex-direction: column;
+        height: auto;
+        padding: 0.75rem;
+    }
+    
+    .topbar-fields {
+        width: 100%;
+        max-width: none;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .layout {
+        height: calc(100vh - 110px);
+    }
+}
+
+@media (max-width: 768px) {
+    .layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: 180px;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .url-bar {
+        gap: 0.5rem;
+    }
+
+    .tab-panel {
+        max-height: 180px;
+    }
+}
