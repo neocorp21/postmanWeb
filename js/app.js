@@ -6,7 +6,7 @@
    Constants
 ============================================================ */
 const CONFIG = Object.freeze({
-    ENDPOINT_URL: ' https://consumoarquitectura.onrender.com/api/v1/architecture/endpoints',
+    ENDPOINT_URL: ' https://consumoarquitectura-production.up.railway.app/api/v1/architecture/endpoints',
 
     STORAGE: {
         BASE_URL: 'at_baseUrl',
